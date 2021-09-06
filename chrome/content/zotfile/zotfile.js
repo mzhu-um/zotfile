@@ -1021,4 +1021,43 @@ Zotero.ZotFile = new function() {
         if(description) progressWin.addDescription(this.ZFgetString('general.warning.skippedAtt.msg'));
         progressWin.startCloseTimer(this.getPref("info_window_duration"));
     });
+    /**
+     * Move select attachments
+     * @return {void}
+     */
+    this.moveSelectedAttachments = Zotero.Promise.coroutine(function* () {
+        // get selected attachments
+        var atts = Zotero.Items.get(this.getSelectedAttachments())
+            .filter(this.checkFileType);
+        // confirm renaming
+        if (this.getPref('confirmation_batch_ask') && atts.length >= this.getPref('confirmation_batch')) 
+            if(!confirm(this.ZFgetString('renaming.moveRename', [atts.length])))
+                return;
+        // show infoWindow        
+        var progressWin = this.progressWindow(this.ZFgetString('renaming.renamed')),
+            description = atts.length == 0;
+        // rename attachments
+        for (let i = 0; i < atts.length; i++) {
+            // get attachment and add line to infoWindow
+            var att = atts[i],
+                progress = new progressWin.ItemProgress(att.getImageSrc(), att.getField('title'));
+            // check attachment
+            if(!(yield att.fileExists()) || att.isTopLevelItem() || this.Tablet.getTabletStatus(att)) {
+                description = true;
+                progress.setError();
+                continue;
+            }
+            // Rename and move attachment
+            att = yield this.renameAttachment(att, this.getPref('import'), false);
+            if(!att) {
+                progress.setError();
+                continue;
+            }
+            // update progress window
+            progress.complete(att.attachmentFilename, att.getImageSrc());
+        }
+        // show messages and handle errors
+        if(description) progressWin.addDescription(this.ZFgetString('general.warning.skippedAtt.msg'));
+        progressWin.startCloseTimer(this.getPref("info_window_duration"));
+    });
 };
