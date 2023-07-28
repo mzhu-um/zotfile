@@ -1054,7 +1054,7 @@ Zotero.ZotFile = new function() {
      * @param  {book}        verbose   Notification about renaming.
      * @return {Zotero.Item}           Zotero item for renamed attachment.
      */
-    this.renameAttachment = Zotero.Promise.coroutine(function* (att, imported, rename, folder, subfolder, verbose) {
+    this.renameAttachment = Zotero.Promise.coroutine(function* (att, imported, rename, folder, subfolder, verbose, retitle) {
         // default arguments
         imported = typeof imported !== 'undefined' ? imported : this.getPref('import');
         var subfolder_default = !imported & this.getPref('subfolder') ? this.getPref('subfolderFormat') : '';
@@ -1062,6 +1062,7 @@ Zotero.ZotFile = new function() {
         folder = typeof folder !== 'undefined' ? folder : this.getPref('dest_dir');
         subfolder = typeof subfolder !== 'undefined' ? subfolder : subfolder_default;
         verbose = typeof verbose !== 'undefined' ? verbose : true;
+        retitle = typeof retitle !== 'undefined' ? retitle : true;
         // check function arguments
         if (!att.isAttachment()) throw('Zotero.ZotFile.renameAttachment(): No attachment item.');
         if (att.isTopLevelItem()) throw('Zotero.ZotFile.renameAttachment(): Attachment is top-level item.');
@@ -1090,7 +1091,7 @@ Zotero.ZotFile = new function() {
             // rename file associated with attachment
             yield attNew.renameAttachmentFile(filename);
             // change title of attachment item
-            attNew.setField('title', filename);
+            if (retitle) attNew.setField('title', filename);
             // restore attachment data
             attNew.setRelations(att_relations);
             if(att_note != '') attNew.setNote(att_note);
@@ -1143,7 +1144,7 @@ Zotero.ZotFile = new function() {
             // rename file associated with attachment
             yield att.renameAttachmentFile(filename);
             // change title of attachment item
-            att.setField('title', filename);
+            if (retitle) att.setField('title', filename);
             yield att.saveTx();
             // notification
             if (verbose) this.messages_report.push(this.ZFgetString('renaming.imported', [filename]));
@@ -1158,7 +1159,7 @@ Zotero.ZotFile = new function() {
             var options = {file: path, libraryID: item.libraryID, parentItemID: item.id, collections: undefined, saveOptions: {skipSelect: true}};
             attNew = yield Zotero.Attachments.linkFromFile(options);
             // change title of attachment item
-            attNew.setField('title', filename);
+            if (retitle) attNew.setField('title', filename);
             // restore attachment data
             attNew.setRelations(att_relations);
             if(att_note != '') attNew.setNote(att_note);
@@ -1208,7 +1209,7 @@ Zotero.ZotFile = new function() {
         if (!att.isImportedAttachment() && !imported && item.library.libraryType == 'user') {
             // relink attachment
             yield this.moveLinkedAttachmentFile(att, location, filename, false);
-            att.setField('title', filename);
+            if (retitle) att.setField('title', filename);
             yield att.saveTx();
             // notification
             if(verbose) this.messages_report.push(this.ZFgetString('renaming.linked', [filename]));
@@ -1259,7 +1260,7 @@ Zotero.ZotFile = new function() {
         progressWin.startCloseTimer(this.getPref("info_window_duration"));
     });
     /**
-     * Move select attachments
+     * Move and Rename select attachments without renaming the title
      * @return {void}
      */
     this.moveSelectedAttachments = Zotero.Promise.coroutine(function* () {
@@ -1285,7 +1286,7 @@ Zotero.ZotFile = new function() {
                 continue;
             }
             // Rename and move attachment
-            att = yield this.renameAttachment(att, this.getPref('import'), false);
+            att = yield this.renameAttachment(att, this.getPref('import'), undefined, undefined, undefined, undefined, false);
             if(!att) {
                 progress.setError();
                 continue;

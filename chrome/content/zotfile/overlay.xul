@@ -17,6 +17,7 @@
 				<menuitem label="&renameSelectedAttachments.label;"
                   tooltiptext="&renameSelectedAttachments.tooltiptext;"
                   oncommand="Zotero.ZotFile.renameSelectedAttachments();"/>
+				<menuseparator/>
 				<menuitem label="&moveSelectedAttachments.label;"
                   tooltiptext="&moveSelectedAttachments.tooltiptext;"
                   oncommand="Zotero.ZotFile.moveSelectedAttachments();"/>
