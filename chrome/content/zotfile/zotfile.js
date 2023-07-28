@@ -584,7 +584,7 @@ Zotero.ZotFile = new function() {
      * @return {string}              Formatted filename with extension
      */
     this.getFilename = function(item, name, format) {
-        // check function arguments
+        // check pfunction arguments
         if (!item.isRegularItem()) throw('getFilename: Not regular zotero item.');
         // check whether renaming is disabled
         if(this.getPref('disable_renaming')) return(name);
@@ -752,6 +752,14 @@ Zotero.ZotFile = new function() {
         yield this.removeEmptyFolders(sourceDir);
         // return path to new location
         return destPath;
+    });
+
+    this.commitGitRepo = Zotero.Promise.coroutine(function* (){
+        repoPath = OS.Path.normalize("this.getPref('dest_dir)");
+        if (typeof repoPath === 'undefined') throw("Zotero.Zotfile.commitGitRepo(): no dest dir is configured.");
+        // do commit
+        commitScript = OS.Path.join(repoPath, "commit.sh");
+        yield Zotero.Utilities.Internal.exec("/bin/bash", ["-c", commitScript]);
     });
 
     /**
@@ -1191,6 +1199,7 @@ Zotero.ZotFile = new function() {
             yield att.eraseTx();
             // notification and return
             if(verbose) this.messages_report.push(this.ZFgetString('renaming.linked', [filename]));
+            yield this.commitGitRepo();
             return attNew;
         }
         // (d) linked to linked attachment (only if library is local)
