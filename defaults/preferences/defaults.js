@@ -17,6 +17,7 @@ pref("extensions.zotfile.max_authors", 2);
 pref("extensions.zotfile.number_truncate_authors", 1);
 pref("extensions.zotfile.add_etal", true);
 pref("extensions.zotfile.etal", " et al");
+pref("extensions.zotfile.zotero7transition", true);
 pref("extensions.zotfile.authors_delimiter", "_");
 pref("extensions.zotfile.removeDiacritics", false);
 pref("extensions.zotfile.removePeriods", false);
@@ -38,7 +39,7 @@ pref("extensions.zotfile.version","");
 pref("extensions.zotfile.zotfile3update",false);
 pref("extensions.zotfile.info_window_duration_clickable",8000);
 pref("extensions.zotfile.info_window_duration",6000);
-pref("extensions.zotfile.wildcards.default",'{"a": "author", "A": {"field": "author", "operations":[{"function":"exec","regex": "\\\\w{1}"},{"function":"toUpperCase"}]}, "F": "authorLastF", "I": "authorInitials", "d": "editor", "D": {"field": "editor", "operations":[{"function":"exec","regex": "\\\\w{1}"},{"function":"toUpperCase"}]}, "L": "editorLastF", "l": "editorInitials", "t": "titleFormated", "h": "shortTitle", "j": "publicationTitle", "s": "journalAbbreviation", "p": "publisher", "w": {"default": "publisher", "audioRecording": "label", "bill": "legislativeBody", "case": "court", "computerProgram": "company", "film": "distributor", "journalArticle": "publicationTitle", "magazineArticle": "publicationTitle", "newspaperArticle": "publicationTitle", "patent": "issuingAuthority", "presentation": "meetingName", "radioBroadcast": "network", "report": "institution", "thesis": "university", "tvBroadcast": "network"}, "n": "patentNumber", "i": "assignee", "y": {"field": {"default": "date", "patent": "issueDate"}, "operations":[{"function":"exec","regex": "\\\\d{4}"}]}, "v": "volume", "e": "issue", "T": "itemType", "f": "pages", "x": "extra", "c": "collectionPaths", "g": "authorLastG", "q":"lastAuthor", "Q":"lastAuthor_lastInitial", "u":"lastAuthor_lastf", "U":"lastAuthor_initials", "b":"citekey"}');
+pref("extensions.zotfile.wildcards.default",'{"a": "author", "A": {"field": "author", "operations":[{"function":"exec","regex": "\\\\w{1}"},{"function":"toUpperCase"}]}, "F": "authorLastF", "I": "authorInitials", "d": "editor", "D": {"field": "editor", "operations":[{"function":"exec","regex": "\\\\w{1}"},{"function":"toUpperCase"}]}, "L": "editorLastF", "l": "editorInitials", "t": "titleFormated", "h": "shortTitle", "j": "publicationTitle", "s": "journalAbbreviation", "p": "publisher", "w": {"default": "publisher", "audioRecording": "label", "bill": "legislativeBody", "case": "court", "computerProgram": "company", "film": "distributor", "journalArticle": "publicationTitle", "magazineArticle": "publicationTitle", "newspaperArticle": "publicationTitle", "patent": "issuingAuthority", "presentation": "meetingName", "radioBroadcast": "network", "report": "institution", "thesis": "university", "tvBroadcast": "network"}, "n": "patentNumber", "i": "assignee", "y": "year", "v": "volume", "e": "issue", "T": "itemType", "f": "pages", "x": "extra", "c": "collectionPaths", "g": "authorLastG", "q":"lastAuthor", "Q":"lastAuthor_lastInitial", "u":"lastAuthor_lastf", "U":"lastAuthor_initials", "b":"citekey"}');
 pref("extensions.zotfile.wildcards.user",'{}');
 
 pref("extensions.zotfile.tablet", false);

@@ -1,4 +1,8 @@
 
+#### Development status
+
+Zotfile is currently not actively developed and maintained! Updates are extremely rare.
+
 ### FEATURES
 Zotfile is a Zotero plugin to manage your attachments: automatically rename, move, and attach PDFs (or other files) to Zotero items, sync PDFs from your Zotero library to your (mobile) PDF reader (e.g. an iPad, Android tablet, etc.) and extract annotations from PDF files.
 
@@ -59,6 +63,7 @@ ZotFile renames files based on bibliographic information from the currently sele
 
 ##### Wildcards
 - `%a` last names of authors (not editors etc) or inventors. The maximum number of authors are changed under 'Additional Settings'.
+- `%b` citation key
 - `%I` author initials.
 - `%F` author's last name with first letter of first name (e.g. EinsteinA).
 - `%A` first letter of author (useful for subfolders)
@@ -147,15 +152,42 @@ All wildcards are now defined in the hidden preference `zotfile.wildcards.defaul
     },
     "3": {
         "field": "title",
-        "regex": "([\\w ,-]{1,50})[:\\.?!]?",
-        "group": 1
+        "operations": [{
+            "function":"exec",
+            "regex": "([\\w ,-]{1,50})[:\\.?!]?",
+            "group": 1
+        }]
     },
     "4": {
+        "field":"dateAdded",
+        "operations": [{
+            "function": "replace",
+            "regex": "(\\d{4})-(\\d{2})-(\\d{2})(.*)",
+            "replacement": "$1$2$3",
+            "flags":"g"
+        }]
+    },
+    "5": {
         "default": {
             "field": "title",
-            "regex": "([\\w ,-]{1,10})[:\\.?!]?",
-            "group": 1,
-            "transform": "upperCase"
+            "operations": [
+                {
+                    "function":"replace",
+                    "regex": "\\d",
+                    "replacement": ""
+                },
+                {
+                    "function": "exec",
+                    "regex": "([\\w ,-]{1,10})[:\\.?!]?",
+                    "group": 1
+                },
+                {
+                    "function": "toUpperCase"
+                },
+                {
+                    "function": "trim"
+                }
+            ]
         },
         "journalArticle": "publicationTitle"
     }

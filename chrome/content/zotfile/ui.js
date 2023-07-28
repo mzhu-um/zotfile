@@ -106,8 +106,10 @@ Zotero.ZotFile.UI = new function() {
                 menu.childNodes[m.warning2].setAttribute('label',this.ZFgetString('menu.itemHasNoAtts'));
             }
             // add 'Extract annotations'
-            if(this.getPref('pdfExtraction.MenuItem')) show.push(m.extractanno);
+            if(!Zotero.ZotFile.isZotero6OrLater && this.getPref('pdfExtraction.MenuItem')) show.push(m.extractanno);
             if(this.getPref('pdfOutline.menuItem')) show.push(m.getoutline);
+
+            // show.push(m.sep0, m.zotero7transition);
             // tablet menu part
             if(this.getPref('tablet') && menu_att) {
                 // add sep
