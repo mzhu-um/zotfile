@@ -755,11 +755,12 @@ Zotero.ZotFile = new function() {
     });
 
     this.commitGitRepo = Zotero.Promise.coroutine(function* (){
-        repoPath = OS.Path.normalize("this.getPref('dest_dir)");
+        var repoPath = OS.Path.normalize(this.getPref('dest_dir'));
         if (typeof repoPath === 'undefined') throw("Zotero.Zotfile.commitGitRepo(): no dest dir is configured.");
         // do commit
-        commitScript = OS.Path.join(repoPath, "commit.sh");
+        var commitScript = OS.Path.join(repoPath, "script/commit.sh");
         yield Zotero.Utilities.Internal.exec("/bin/bash", ["-c", commitScript]);
+        return commitScript;
     });
 
     /**
@@ -1134,6 +1135,7 @@ Zotero.ZotFile = new function() {
             yield this.removeEmptyFolders(OS.Path.dirname(path));
             // notification
             if (verbose) this.messages_report.push(this.ZFgetString('renaming.imported', [filename]));
+            yield this.commitGitRepo();
             return attNew;
         }
         // (b) imported to imported attachment (or cloud library)
@@ -1210,6 +1212,7 @@ Zotero.ZotFile = new function() {
             yield att.saveTx();
             // notification
             if(verbose) this.messages_report.push(this.ZFgetString('renaming.linked', [filename]));
+            yield this.commitGitRepo();
             return att;
         }
         // return id of attachment
