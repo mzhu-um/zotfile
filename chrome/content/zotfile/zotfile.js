@@ -763,6 +763,16 @@ Zotero.ZotFile = new function() {
         return commitScript;
     });
 
+    this.updateGitRepo = Zotero.Promise.coroutine(function* (){
+        var repoPath = OS.Path.normalize(this.getPref('dest_dir'));
+        if (typeof repoPath === 'undefined') throw("Zotero.Zotfile.updateGitRepo(): no dest dir is configured.");
+        // do update
+        var updateScript = OS.Path.join(repoPath, "script/update.sh");
+        yield Zotero.Utilities.Internal.exec("/bin/bash", ["-c", updateScript]);
+        return updateScript;
+    });
+
+
     /**
      * Copy file to new location
      * @param  {String} sourcePath  File to move.
@@ -1063,6 +1073,9 @@ Zotero.ZotFile = new function() {
         subfolder = typeof subfolder !== 'undefined' ? subfolder : subfolder_default;
         verbose = typeof verbose !== 'undefined' ? verbose : true;
         retitle = typeof retitle !== 'undefined' ? retitle : true;
+        
+        yield this.updateGitRepo();
+
         // check function arguments
         if (!att.isAttachment()) throw('Zotero.ZotFile.renameAttachment(): No attachment item.');
         if (att.isTopLevelItem()) throw('Zotero.ZotFile.renameAttachment(): Attachment is top-level item.');
